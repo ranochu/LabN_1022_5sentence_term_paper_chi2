@@ -1,0 +1,88 @@
+---
+title: "LabN_1022_5sentence_term_parper_chi2"
+date: today
+author:
+  - name: Rano Chu
+    email: pengyuchu@ln.hk
+    affiliation: 
+      - University of Wisconsin–Madison
+abstract: > 
+  In this study, we study the Chi2 with python.
+keywords:
+  - Chi square
+  - Quarto
+  - Book color
+  - Book genre
+format:
+  html:
+    theme: cosmos
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    code-fold: show
+execute:
+    echo: true
+bibliography: references.bib
+---
+
+# Introduction 
+
+RQ: Does the color of the book predict the book's genre?
+The adage "don't judge a book by its cover" urges readers to look beyond superficial visual cues. However, in modern publishing, cover design is a deliberate marketing tool. Color psychology and visual branding are strategically used to signal tone, mood, and content before a reader opens the text. This paper examines whether cover hue functions as a statistically significant indicator of narrative category.
+
+# Literature Review
+
+Cover design serves as an essential visual communication tool in book marketing and publishing. Research in color psychology and consumer behavior confirms that color choices directly influence reader expectations and category perception.
+
+@elliot2014color demonstrate that color carries specific contextual meanings that automatically trigger cognitive and emotional responses in human perception . In commercial settings, these visual associations guide decision-making; Others show that consumers rely heavily on product color as an immediate screening mechanism to categorize items quickly and process visual information efficiently [@kauppinen2010exploring].
+
+Building on these psychological and behavioral foundations, this study evaluates whether publishers' primary cover color choices correlate with narrative genre classifications.
+
+# Method
+
+```{python}
+import pandas as pd
+import numpy as np
+import seaborn as sns
+from scipy.stats import chi2_contingency
+
+domain = "https://raw.githubusercontent.com/"
+path = "adamrossnelson/confident/refs/heads/main/data/"
+file = "confident_fictional_books.csv"
+
+books = pd.read_csv(domain + path + file)
+```
+
+Null: the color of the book does not predict the book's genre.
+
+Data is from `{python} books.shape[0]` observations, which is analyzed using a Chi-square test of independence to determine whether a relationship exists between book color and genre. 
+
+It is a `{python} books['book_genre'].nunique()` x `{python} books['book_color'].nunique()` cross-tabulation test.
+
+# Results
+
+```{python}
+# Conduct the Chi-square test with chi2_contingency
+contingency_table = pd.crosstab(books["book_genre"], books["book_color"])
+x2, pval, degf, _ = chi2_contingency(contingency_table)
+```
+Example1: `{python} f"{.000000000962582}"`  
+Example2: `{python} f"{.000000000962582:.2g}"` (the two sig figs)  
+Example3: `{python} f"{.000000000962582:.2f}"` (the two sig figs)  
+
+Results:  
+- Ch2 Stats: `{python} f"{x2:.5f}"`  
+- Pvalue: `{python} f"{pval:.5f}"`  
+- Degress of Freedom: `{python} f"{degf}"`
+
+With a Chi2 statistics results of `{python} f"{x2:.5f}"`   and a p-value nearly equal to `{python} f"{pval:.5f}"` (degress of freedom: `{python} f"{degf}"`), we fail to reject null hythothesis. Therefore we conclude that there is no evidence that the book's cover color could predict this book's genre.
+
+# Discussion
+
+The empirical findings do not support the hypothesis that primary book cover color serves as a reliable predictor of genre. Although previous literature emphasizes the role of visual marketing and color psychology in consumer perception [@elliot2014color; @kauppinen2010exploring], the lack of statistical significance in our Chi-square test indicates that modern publishers may not systematically constrain specific genres to uniform color palettes. This suggests that readers cannot reliably infer narrative category from cover hue alone, reaffirming the classic adage to not judge a book purely by its cover. Future research could expand this analysis by considering multi-color palettes, typography, or visual imagery beyond primary background hues.
+
+# References
+
+:::{#refs}
+:::
+
